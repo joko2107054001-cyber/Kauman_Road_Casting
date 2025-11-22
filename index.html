@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cor Jalan Kauman</title>
+<link rel="manifest" href="manifest.json">
+<style>
+    body { font-family: Arial, sans-serif; margin: 0; background:#e9eef7; }
+    header { background:#004b88; color:white; text-align:center; padding:16px; font-size:22px; font-weight:bold; }
+    .container { padding: 20px; }
+    label { font-weight:600; }
+    input, select {
+        width:100%; padding:12px; margin-top:6px; margin-bottom:16px;
+        border-radius:8px; border:1px solid #94a3b8; font-size:16px;
+    }
+    button {
+        width:100%; padding:16px; font-size:18px;
+        background:#0077cc; color:white; border:none; border-radius:10px;
+        cursor:pointer; font-weight:bold;
+    }
+    button:hover { background:#005fa8; }
+    .card {
+        background:white; padding:18px; border-radius:12px;
+        margin-top:20px; box-shadow:0 4px 10px rgba(0,0,0,0.12);
+    }
+</style>
+</head>
+
+<body>
+<header>Cor Jalan Kauman</header>
+
+<div class="container">
+
+    <label>Panjang Jalan (meter)</label>
+    <input type="number" id="panjang">
+
+    <label>Lebar Jalan (meter)</label>
+    <input type="number" id="lebar">
+
+    <label>Tebal Jalan (meter)</label>
+    <input type="number" id="tebal">
+
+    <label>Pilih Mutu Beton</label>
+    <select id="mutu">
+        <option value="0.1227">K-225</option>
+        <option value="0.1042">K-250</option>
+        <option value="0.0968">K-300</option>
+    </select>
+
+    <h3>💰 Harga Material</h3>
+    <label>Harga Semen per Sak (Rp)</label>
+    <input type="number" id="hargaSemen" placeholder="contoh: 60000">
+
+    <label>Harga Pasir per m³ (Rp)</label>
+    <input type="number" id="hargaPasir" placeholder="contoh: 200000">
+
+    <label>Harga Kerikil per m³ (Rp)</label>
+    <input type="number" id="hargaKerikil" placeholder="contoh: 230000">
+
+    <button onclick="hitung()">🔍 Hitung Kebutuhan & Biaya</button>
+
+    <div id="hasil"></div>
+</div>
+
+<script>
+function formatRupiah(angka) {
+    return "Rp " + angka.toLocaleString("id-ID");
+}
+
+function hitung() {
+    const p = parseFloat(document.getElementById("panjang").value);
+    const l = parseFloat(document.getElementById("lebar").value);
+    const t = parseFloat(document.getElementById("tebal").value);
+    const mutu = parseFloat(document.getElementById("mutu").value);
+
+    const hargaSemen = parseFloat(document.getElementById("hargaSemen").value);
+    const hargaPasir = parseFloat(document.getElementById("hargaPasir").value);
+    const hargaKerikil = parseFloat(document.getElementById("hargaKerikil").value);
+
+    if (isNaN(p)||isNaN(l)||isNaN(t)) {
+        alert("Isi semua ukuran jalan dulu");
+        return;
+    }
+
+    const volume = p * l * t;
+    const semen = volume / mutu;
+    const sak = semen;
+    const pasir = volume * 0.6514;
+    const kerikil = volume * 0.7622;
+
+    // biaya
+    let total = 0;
+    let biayaSemen = 0, biayaPasir = 0, biayaKerikil = 0;
+
+    if (!isNaN(hargaSemen)) biayaSemen = hargaSemen * sak;
+    if (!isNaN(hargaPasir)) biayaPasir = hargaPasir * pasir;
+    if (!isNaN(hargaKerikil)) biayaKerikil = hargaKerikil * kerikil;
+
+    total = biayaSemen + biayaPasir + biayaKerikil;
+
+    document.getElementById("hasil").innerHTML = `
+        <div class="card">
+            <h3>📌 Hasil Perhitungan</h3>
+            <p><b>Volume Beton:</b> ${volume.toFixed(2)} m³</p>
+            <p><b>Semen:</b> ${semen.toFixed(2)} m³ (${sak.toFixed(0)} sak × 40 kg)</p>
+            <p><b>Pasir:</b> ${pasir.toFixed(2)} m³</p>
+            <p><b>Kerikil:</b> ${kerikil.toFixed(2)} m³</p>
+            <hr>
+            <h3>💵 Estimasi Biaya Material</h3>
+            <p>Semen: ${formatRupiah(biayaSemen)}</p>
+            <p>Pasir: ${formatRupiah(biayaPasir)}</p>
+            <p>Kerikil: ${formatRupiah(biayaKerikil)}</p>
+            <h2>🔻 Total Biaya: ${formatRupiah(total)}</h2>
+        </div>`;
+}
+</script>
+</body>
+</html>
