@@ -38,7 +38,7 @@
     <label>Lebar Jalan (meter)</label>
     <input type="number" id="lebar">
 
-    <label>Tebal Jalan (meter)</label>
+    <label>Tebal Jalan (cm)</label>
     <input type="number" id="tebal">
 
     <label>Pilih Mutu Beton</label>
@@ -83,7 +83,7 @@ function hitung() {
         return;
     }
 
-    const volume = p * l * t;
+    const volume = p * l * t/100;
     const semen = volume / mutu;
     const sak = semen;
     const pasir = volume * 0.6514;
@@ -102,8 +102,8 @@ function hitung() {
     document.getElementById("hasil").innerHTML = `
         <div class="card">
             <h3>📌 Hasil Perhitungan</h3>
-            <p><b>Volume Beton:</b> ${volume.toFixed(2)} m³</p>
-            <p><b>Semen:</b> ${semen.toFixed(2)} m³ (${sak.toFixed(0)} sak × 40 kg)</p>
+            <p><b>Volume Cor:</b> ${volume.toFixed(2)} m³</p>
+            <p><b>Semen:</b> ${semen.toFixed(2)} sak (${sak.toFixed(0)} sak × 40 kg)</p>
             <p><b>Pasir:</b> ${pasir.toFixed(2)} m³</p>
             <p><b>Kerikil:</b> ${kerikil.toFixed(2)} m³</p>
             <hr>
